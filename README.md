@@ -1,6 +1,4 @@
-# Learning Division with Neural Arithmetic Logic Modules
-This repository is the official implementation of [Learning Division with Neural Arithmetic Logic Modules](TODO).
-
+# Exploring the Learning Mechanisms of Neural Division Module
 This work builds ontop of the research on **[Neural Arithmetic Units](https://openreview.net/forum?id=H1gNOeHKPS) 
 by Andreas Madsen and Alexander Rosenberg Johansen**. 
 The [original code](https://github.com/AndreasMadsen/stable-nalu) is by Andreas Madsen, who created the 
@@ -44,16 +42,15 @@ First, create a csv file containing the threshold values for each range using
     
 
 ##### Experiment Meta-Information Table
-| Figure | Experiment                      | Shell script name                                                                                        | Lookup key              |
-|--------|---------------------------------|------------------------------------------------------------------------------------------------------|-----------------------------|
-| 1a     | L1 regularisation               | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-L1             |
-| 1b     | L1 beta sweep                   | [in2-realnpu-beta-sweep](lfs_batch_jobs/single_layer_task/neurips_2021/in2-realnpu-beta-sweep.sh)    | nips-realnpu-L1_sweep       |
-| 2a     | Clipping                        | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-clipping       |
-| 2b     | Discretisation                  | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-discretisation |
-| 2c     | Initalisation                   | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-init           |
-| 3      | No redundancy (input size 2)    | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-sltr-in2               |
-| 4      | Mixed-signed inputs             | [in2-mixed-signs.sh](lfs_batch_jobs/single_layer_task/neurips_2021/in2-mixed-signs.sh)               | N/A (see section below)     |
-| 6      | With redundancy (input size 10) | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh)                           | nips-sltr-in10              |
+| Experiment                      | Shell script name                                                                                        | Lookup key              |
+|---------------------------------|------------------------------------------------------------------------------------------------------|-----------------------------|
+| L1 regularisation               | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-L1             |
+| L1 beta sweep                   | [in2-realnpu-beta-sweep](lfs_batch_jobs/single_layer_task/neurips_2021/in2-realnpu-beta-sweep.sh)    | nips-realnpu-L1_sweep       |
+| Clipping                        | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-clipping       |
+| Discretisation                  | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-discretisation |
+| Initalisation                   | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-init           |
+| No redundancy (input size 2)    | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-sltr-in2               |
+| Mixed-signed inputs             | [in2-mixed-signs.sh](lfs_batch_jobs/single_layer_task/neurips_2021/in2-mixed-signs.sh)               | N/A (see section below)     | With redundancy (input size 10) | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh)                           | nips-sltr-in10              |
 
 
 #### Mixed-signed Inputs (on the modified Real NPU) 
@@ -62,47 +59,47 @@ Generate the tensorboard results and the csv file using the first two stages.
 To generate the plot, run:  
 <pre> Rscript <a href="export/single_layer_task/neurips_range.r">neurips_range.r</a> /data/nalms/csvs/sltr-in2/ /data/nalms/csvs/r_results/neurips-2021/ mixed-sign-ds_realnpu-modified op-div None</pre>
 
-### Division by Small Numbers (Figure 5)
+### Division by Small Numbers 
 This does not require running the 3 stages. Instead:
 1. Generate gold test error csv: `python3 export/single_layer_task/generate_divBy0_extrap_thresholds.py`
 2. Create plot: <pre> Rscript <a href="export/single_layer_task/divBy0_gold_test_errors.r">divBy0_gold_test_errors.r</a></pre>
 
-### More Challenging Distributions (Figure 6 and 7)
+### More Challenging Distributions 
 Generate the tensorboard results and the csv file using the first two stages. 
 
-To generate the Figure 6, run:  
+To generate the 2 input Figure, run:  
 <pre> Rscript <a href="export/single_layer_task/neurips_range_distributions.r">neurips_range_distributions.r</a> /data/nalms/csvs/sltr-in2/distributions/ /data/nalms/csvs/r_results/neurips-2021/ sltr-in2-distributions op-div None nips-in2-distributions</pre>
 
-To generate the Figure 7, run:  
+To generate the 10 input Figure, run:  
 <pre> Rscript <a href="export/single_layer_task/neurips_range_distributions.r">neurips_range_distributions.r</a> /data/nalms/csvs/sltr-in10/distributions/ /data/nalms/csvs/r_results/neurips-2021/ sltr-in10-distributions op-div None nips-in10-distributions</pre>
 
 
-### RMSE Loss Landscape (Figure 9)
+### RMSE Loss Landscape
 See Collab [Notebook](notebook/2_layer_singularity_issue.ipynb) 
 
 ## Appendix
 Use the same [3 stages](https://github.com/bmistry4/nalu-stable-exp/blob/master/README.md#generating-plots-consists-of-3-stages) to generate plots. 
 
-| Figure | Experiment                      | Shell script name                                                          | Lookup key                      |
-|--------|---------------------------------|----------------------------------------------------------------------------|---------------------------------|
-| 10     | NRU - Learning rates            | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)   | nips-in2-nru-lr                 |
-| 11     | DivBy0 - [a] to 1/a             | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
-| 12     | DivBy0 - [a,b] to 1/a           | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
-| 13     | DivBy0 - [a,b] to a/b           | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
-| 14     | Real NPU - L2 regularisation    | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)   | nips-realnpu-L2                 |
-| 15     | NPU                             | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-npu              |
-| 16     | Real NPU - NAU discretisation   | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-realnpu-W-reg         |
-| 17     | NMRU - Ablation                 | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nmru-ablation         |
-| 18     | NMRU - Learning rates           | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nmru-lr               |
-| 19     | NMRU - Optimiser                | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nmru-optimiser        |
-| 20     | NRU - Separate signs            | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nru-separate-mag-sign |
-| 21     | Losses - Real NPU               | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-losses-realnpu   |
-| 22     | Losses - NRU                    | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-losses-nru       |
-| 23     | Losses - NMRU                   | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-losses-nmru      |
+| Experiment                      | Shell script name                                                          | Lookup key                      |
+|---------------------------------|----------------------------------------------------------------------------|---------------------------------|
+| NRU - Learning rates            | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)   | nips-in2-nru-lr                 |
+| DivBy0 - [a] to 1/a             | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
+| DivBy0 - [a,b] to 1/a           | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
+| DivBy0 - [a,b] to a/b           | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
+| Real NPU - L2 regularisation    | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)   | nips-realnpu-L2                 |
+| NPU                             | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-npu              |
+| Real NPU - NAU discretisation   | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-realnpu-W-reg         |
+| NMRU - Ablation                 | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nmru-ablation         |
+| NMRU - Learning rates           | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nmru-lr               |
+| NMRU - Optimiser                | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nmru-optimiser        |
+| NRU - Separate signs            | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-in10-nru-separate-mag-sign |
+| Losses - Real NPU               | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-losses-realnpu   |
+| Losses - NRU                    | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-losses-nru       |
+| Losses - NMRU                   | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh) | nips-sltr-in10-losses-nmru      |
 
 Any experiments with different steps are explained below.
 
-### Division by Small Numbers - Experimental Results (Appendix Figures 11-13)
+### Division by Small Numbers - Experimental Results 
 1. Generate the extrapolation thresholds using `python3 export/single_layer_task/generate_divBy0_extrap_thresholds.py` 
 with `eps=torch.finfo().eps`.
 2. Copy thresholds into the relevant cells in [exp_setups.csv](export/single_layer_task/exp_setups.csv).
