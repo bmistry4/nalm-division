@@ -54,7 +54,7 @@ python3 experiments/single_layer.py \
 #    --learning-rate 5e-3 --regualizer-beta-start 1e-9 --regualizer-beta-end 1e-7 \
 #    --regualizer-l1 --regualizer-shape none --regualizer 0 --npu-clip wg \
 #    --interpolation-range ${interp} --extrapolation-range ${extrap} \
-#    --seed ${seed} --max-iterations 50000 ${verbose_flag} --log-interval ${log_interval} \
+#    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
 #    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} ${no_save_flag} \
 #    --regualizer-npu-w 1 --regualizer-gate 1 --reg-scale-type madsen \
 #    --regualizer-scaling-start 40000 --regualizer-scaling-end 50000 \
@@ -66,7 +66,7 @@ python3 experiments/single_layer.py \
 #python3 experiments/single_layer.py \
 #    --operation div --layer-type NRU --nac-mul mnac \
 #    --regualizer-scaling-start 20000 --regualizer-scaling-end 35000 \
-#    --interpolation-range ${interpolation_ranges[i]} --extrapolation-range ${extrapolation_ranges[i]} \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
 #    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
 #    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} --learning-rate 1
 
@@ -76,7 +76,7 @@ python3 experiments/single_layer.py \
 #python3 experiments/single_layer.py \
 #    --operation div --layer-type SignNMRU \
 #    --regualizer-scaling-start 20000 --regualizer-scaling-end 35000 \
-#    --interpolation-range ${interpolation_ranges[i]} --extrapolation-range ${extrapolation_ranges[i]} \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
 #    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
 #    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} \
 #    --clip-grad-norm 1 --learning-rate 1e-2
@@ -178,7 +178,7 @@ python3 experiments/single_layer.py \
 #python3 experiments/single_layer.py \
 #    --operation div --layer-type NRU --nac-mul mnac \
 #    --regualizer-scaling-start 20000 --regualizer-scaling-end 35000 \
-#    --interpolation-range ${interpolation_ranges[i]} --extrapolation-range ${extrapolation_ranges[i]} \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
 #    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
 #    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} \
 #    --learning-rate 1e-3
@@ -188,7 +188,7 @@ python3 experiments/single_layer.py \
 #python3 experiments/single_layer.py \
 #    --operation div --layer-type NRU --nac-mul mnac \
 #    --regualizer-scaling-start 20000 --regualizer-scaling-end 35000 \
-#    --interpolation-range ${interpolation_ranges[i]} --extrapolation-range ${extrapolation_ranges[i]} \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
 #    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
 #    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} \
 #    --learning-rate 1e-2
@@ -198,7 +198,7 @@ python3 experiments/single_layer.py \
 #python3 experiments/single_layer.py \
 #    --operation div --layer-type NRU --nac-mul mnac \
 #    --regualizer-scaling-start 20000 --regualizer-scaling-end 35000 \
-#    --interpolation-range ${interpolation_ranges[i]} --extrapolation-range ${extrapolation_ranges[i]} \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
 #    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
 #    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} \
 #    --learning-rate 1e-1
@@ -209,7 +209,50 @@ python3 experiments/single_layer.py \
 #    --operation div --layer-type RealNPU --nac-mul real-npu \
 #    --learning-rate 5e-3 --regualizer-beta-start 1e-7 --regualizer-beta-end 1e-5 \
 #    --regualizer-l1 --regualizer-shape none --regualizer 0 --lp-norm 2 \
-#    --interpolation-range ${interpolation_ranges[i]} --extrapolation-range ${extrapolation_ranges[i]} \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
 #    --seed ${seed} --max-iterations 50000 ${verbose_flag}  \
 #    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag}
 
+###
+## RealNPU learning rates (inSize-2)
+# NAME: WG_clip-M-S40000-E50000-G1-W1-WrI_xuc
+# RealNPU -> l1 reg & WG clipping & G1 and W1 reg + NAU init for W_real
+
+# lr: 5e-4
+#experiment_name='RealNPU-mod_inSize2_lr/5e-4'
+#python3 experiments/single_layer.py \
+#    --id 6 --operation div --layer-type RealNPU --nac-mul real-npu \
+#    --learning-rate 5e-4 --regualizer-beta-start 1e-9 --regualizer-beta-end 1e-7 \
+#    --regualizer-l1 --regualizer-shape none --regualizer 0 --npu-clip wg \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
+#    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
+#    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} \
+#    --regualizer-npu-w 1 --regualizer-gate 1 --reg-scale-type madsen \
+#    --regualizer-scaling-start 40000 --regualizer-scaling-end 50000 \
+#    --npu-Wr-init xavier-uniform-constrained
+#
+## lr: 5e-2
+#experiment_name='RealNPU-mod_inSize2_lr/5e-2'
+#python3 experiments/single_layer.py \
+#    --id 7 --operation div --layer-type RealNPU --nac-mul real-npu \
+#    --learning-rate 5e-2 --regualizer-beta-start 1e-9 --regualizer-beta-end 1e-7 \
+#    --regualizer-l1 --regualizer-shape none --regualizer 0 --npu-clip wg \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
+#    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
+#    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} \
+#    --regualizer-npu-w 1 --regualizer-gate 1 --reg-scale-type madsen \
+#    --regualizer-scaling-start 40000 --regualizer-scaling-end 50000 \
+#    --npu-Wr-init xavier-uniform-constrained
+#
+## lr: 5e-1
+#experiment_name='RealNPU-mod_inSize2_lr/5e-1'
+#python3 experiments/single_layer.py \
+#    --id 8 --operation div --layer-type RealNPU --nac-mul real-npu \
+#    --learning-rate 5e-1 --regualizer-beta-start 1e-9 --regualizer-beta-end 1e-7 \
+#    --regualizer-l1 --regualizer-shape none --regualizer 0 --npu-clip wg \
+#    --interpolation-range ${interp} --extrapolation-range ${extrap} \
+#    --seed ${seed} --max-iterations 50000 ${verbose_flag} \
+#    --name-prefix ${experiment_name} --remove-existing-data --no-cuda ${no_save_flag} \
+#    --regualizer-npu-w 1 --regualizer-gate 1 --reg-scale-type madsen \
+#    --regualizer-scaling-start 40000 --regualizer-scaling-end 50000 \
+#    --npu-Wr-init xavier-uniform-constrained

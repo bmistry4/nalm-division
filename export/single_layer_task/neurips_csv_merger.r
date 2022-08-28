@@ -188,6 +188,14 @@ load.and.merge.csvs = function(lookup.name) {
       paste('/data/nalms/csvs/mixedSigns-in10/', 'nmru', csv_ext, sep = '')
     ),
       list('Real NPU (modified)', 'NRU', 'NMRU')
+    ),
+    "nips-in2-realnpu-lr" = npu.csv.merger(list(
+      paste('/data/nalms/csvs/RealNPU-mod_inSize2_lr/', '5e-1', csv_ext, sep = ''),
+      paste('/data/nalms/csvs/RealNPU-mod_inSize2_lr/', '5e-2', csv_ext, sep = ''),
+      paste('/data/nalms/csvs/sltr-in2/', 'realnpu-modified', csv_ext, sep = ''),
+      paste('/data/nalms/csvs/RealNPU-mod_inSize2_lr/RealNPU-mod_inSize2_lr/', '5e-4', csv_ext, sep = '')
+    ),
+      list('5e-1', '5e-2', '5e-3', '5e-4')
     )
   ))
 }

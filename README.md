@@ -91,6 +91,7 @@ Use the same [3 stages](https://github.com/bmistry4/nalu-stable-exp/blob/master/
 
 | Experiment                      | Shell script name                                                          | Lookup key                      |
 |---------------------------------|----------------------------------------------------------------------------|---------------------------------|
+| RealNPU - Learning rates        | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)   | nips-in2-realnpu-lr             |
 | NRU - Learning rates            | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)   | nips-in2-nru-lr                 |
 | DivBy0 - [a] to 1/a             | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
 | DivBy0 - [a,b] to 1/a           | [divBy0.sh](lfs_batch_jobs/single_layer_task/neurips_2021/divBy0.sh)       | -                               |
