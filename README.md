@@ -32,7 +32,7 @@ First, create a csv file containing the threshold values for each range using
         - `<experiment_name>`: value of the experiment_name variable in the shell script used for step 1
 
 3. Call the R script to convert the csv results to a _plot_ (saved as pdf)
-    - <pre> Rscript <a href="export/single_layer_task/neurips_range.r">neurips_range.r</a> None /data/nalms/csvs/r_results/neurips-2021/ sltr-in2 op-div None nips-sltr-in2 </pre>
+    - <pre> Rscript <a href="export/single_layer_task/neurips_range.r">neurips_range.r</a> None /data/nalms/csvs/r_results/ sltr-in2 op-div None nips-sltr-in2 </pre>
         - First arg: N/A
         - Second arg: Path to directory where you want to save the plot file
         - Third arg: Filename for plot(/ loading csv filename if single model). Use lookup key value (see table below).
@@ -48,30 +48,39 @@ First, create a csv file containing the threshold values for each range using
 | L1 beta sweep                   | [in2-realnpu-beta-sweep](lfs_batch_jobs/single_layer_task/neurips_2021/in2-realnpu-beta-sweep.sh)    | nips-realnpu-L1_sweep       |
 | Clipping                        | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-clipping       |
 | Discretisation                  | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-discretisation |
-| Initalisation                   | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-init           |
+| Initialisation                  | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-realnpu-init           |
 | No redundancy (input size 2)    | [sltr-in2.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in2.sh)                             | nips-sltr-in2               |
-| Mixed-signed inputs             | [in2-mixed-signs.sh](lfs_batch_jobs/single_layer_task/neurips_2021/in2-mixed-signs.sh)               | N/A (see section below)     | With redundancy (input size 10) | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh)                           | nips-sltr-in10              |
+| With redundancy (input size 10) | [sltr-in10.sh](lfs_batch_jobs/single_layer_task/neurips_2021/sltr-in10.sh)                           | nips-sltr-in10              |
+| Mixed-signed inputs (input size 2)             | [in2-mixed-signs.sh](lfs_batch_jobs/single_layer_task/neurips_2021/in2-mixed-signs.sh)               | N/A (see section below)     
+| Mixed-signed inputs (input size 10)             | [in10-mixed-signs.sh](lfs_batch_jobs/single_layer_task/neurips_2021/in10-mixed-signs.sh)               | N/A (see section below)     
 
 
 #### Mixed-signed Inputs (on the modified Real NPU) 
 Generate the tensorboard results and the csv file using the first two stages. 
 
-To generate the plot, run:  
-<pre> Rscript <a href="export/single_layer_task/neurips_range.r">neurips_range.r</a> /data/nalms/csvs/sltr-in2/ /data/nalms/csvs/r_results/neurips-2021/ mixed-sign-ds_realnpu-modified op-div None</pre>
+To generate the plot for the 2 input datasets, run:  
+<pre> Rscript <a href="export/single_layer_task/neurips_range.r">neurips_range.r</a> /data/nalms/csvs/mixedSigns-in2/ /data/nalms/csvs/r_results/ mixedSigns-in2 op-div None in2-mixedSigns extrapolation.range 'Real NPU (modified), NRU, NMRU'</pre>
 
-### Division by Small Numbers 
-This does not require running the 3 stages. Instead:
-1. Generate gold test error csv: `python3 export/single_layer_task/generate_divBy0_extrap_thresholds.py`
-2. Create plot: <pre> Rscript <a href="export/single_layer_task/divBy0_gold_test_errors.r">divBy0_gold_test_errors.r</a></pre>
+To generate the plot for the 10 input datasets, run:  
+<pre> Rscript <a href="export/single_layer_task/neurips_range.r">neurips_range.r</a> /data/nalms/csvs/mixedSigns-in2/ /data/nalms/csvs/r_results/ mixedSigns-in10 op-div None in10-mixedSigns extrapolation.range 'Real NPU (modified), NRU, NMRU'</pre>
 
 ### More Challenging Distributions 
 Generate the tensorboard results and the csv file using the first two stages. 
 
 To generate the 2 input Figure, run:  
-<pre> Rscript <a href="export/single_layer_task/neurips_range_distributions.r">neurips_range_distributions.r</a> /data/nalms/csvs/sltr-in2/distributions/ /data/nalms/csvs/r_results/neurips-2021/ sltr-in2-distributions op-div None nips-in2-distributions</pre>
+<pre> Rscript <a href="export/single_layer_task/neurips_range_distributions.r">neurips_range_distributions.r</a> /data/nalms/csvs/sltr-in2/distributions/ /data/nalms/csvs/r_results/ sltr-in2-distributions op-div None nips-in2-distributions</pre>
 
 To generate the 10 input Figure, run:  
-<pre> Rscript <a href="export/single_layer_task/neurips_range_distributions.r">neurips_range_distributions.r</a> /data/nalms/csvs/sltr-in10/distributions/ /data/nalms/csvs/r_results/neurips-2021/ sltr-in10-distributions op-div None nips-in10-distributions</pre>
+<pre> Rscript <a href="export/single_layer_task/neurips_range_distributions.r">neurips_range_distributions.r</a> /data/nalms/csvs/sltr-in10/distributions/ /data/nalms/csvs/r_results/ sltr-in10-distributions op-div None nips-in10-distributions</pre>
+
+### MNIST Arithmetic
+1. Generate the tensorboard files: ``bash parallel_run.sh 0 9 0``. The first 2 arguments representing the number of folds to run in parallel will depend on your available hardware. 
+
+2. Convert tensorboard files to csvs: 
+``python3 export/two_digit_mnist/two_digit_mnist_reader.py --tensorboard-dir /data/nalms/tensorboard/two-digit-mnist/div/<experiment_name>/ --csv-out /data/nalms/csvs/two-digit-mnist/div/<experiment_name>.csv``
+
+3. Create plot:
+<pre> Rscript <a href="export/two_digit_mnist/plot_train_test.r">plot_train_test.r</a> /data/nalms/csvs/two-digit-mnist/div/two-digit-mnist/div/ /data/nalms/csvs/r_results/two-digit-mnist/div/ 2DMNIST-div-1digit_conv None div-1digit_conv-Adam-s3Init plotDP</pre>
 
 
 ### RMSE Loss Landscape
@@ -99,6 +108,11 @@ Use the same [3 stages](https://github.com/bmistry4/nalu-stable-exp/blob/master/
 
 Any experiments with different steps are explained below.
 
+### Division by Small Numbers - Gold test errors
+This does not require running the 3 stages. Instead:
+1. Generate gold test error csv: `python3 export/single_layer_task/generate_divBy0_extrap_thresholds.py`
+2. Create plot: <pre> Rscript <a href="export/single_layer_task/divBy0_gold_test_errors.r">divBy0_gold_test_errors.r</a></pre>
+
 ### Division by Small Numbers - Experimental Results 
 1. Generate the extrapolation thresholds using `python3 export/single_layer_task/generate_divBy0_extrap_thresholds.py` 
 with `eps=torch.finfo().eps`.
@@ -107,13 +121,13 @@ with `eps=torch.finfo().eps`.
 4. Convert tensorboard to csv results (using the usual command) 
 4. Run the following commands to generate the plots for each of the three tasks:
     - [a] to 1/a: 
-    <pre> Rscript <a href="export/single_layer_task/neurips_range_divBy0.r">neurips_range_divBy0.r</a> /data/nalms/csvs/SLTR_divBy0/easy /data/nalms/csvs/r_results/neurips-2021/divBy0/ divBy0-easy op-reciprocal None nips-divBy0-easy zero.range.easy</pre>
+    <pre> Rscript <a href="export/single_layer_task/neurips_range_divBy0.r">neurips_range_divBy0.r</a> /data/nalms/csvs/SLTR_divBy0/easy /data/nalms/csvs/r_results/divBy0/ divBy0-easy op-reciprocal None nips-divBy0-easy zero.range.easy</pre>
 
     - [a,b] to 1/a:
-    <pre> Rscript <a href="export/single_layer_task/neurips_range_divBy0.r">neurips_range_divBy0.r</a> /data/nalms/csvs/SLTR_divBy0/medium /data/nalms/csvs/r_results/neurips-2021/divBy0/ divBy0-medium op-reciprocal None nips-divBy0-medium zero.range.medium</pre>
+    <pre> Rscript <a href="export/single_layer_task/neurips_range_divBy0.r">neurips_range_divBy0.r</a> /data/nalms/csvs/SLTR_divBy0/medium /data/nalms/csvs/r_results/divBy0/ divBy0-medium op-reciprocal None nips-divBy0-medium zero.range.medium</pre>
 
     - [a,b] to a/b: 
-    <pre> Rscript <a href="export/single_layer_task/neurips_range_divBy0.r">neurips_range_divBy0.r</a> /data/nalms/csvs/SLTR_divBy0/hard /data/nalms/csvs/r_results/neurips-2021/divBy0/ divBy0-hard op-div None nips-divBy0-hard zero.range.hard</pre>
+    <pre> Rscript <a href="export/single_layer_task/neurips_range_divBy0.r">neurips_range_divBy0.r</a> /data/nalms/csvs/SLTR_divBy0/hard /data/nalms/csvs/r_results/divBy0/ divBy0-hard op-div None nips-divBy0-hard zero.range.hard</pre>
 
 ### (Note - Scipy package version)
 If you want to have samples from a truncated normal distribution then the scipy version installed must be

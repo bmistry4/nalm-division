@@ -11,6 +11,11 @@ import misc.utils as utils
 
 # Parse arguments
 parser = argparse.ArgumentParser(description='Runs the simple function static task')
+parser.add_argument('--id',
+                        action='store',
+                        default=-1,
+                        type=int,
+                        help='Unique id to identify experiment')
 parser.add_argument('--layer-type',
                     action='store',
                     default='NALU',
@@ -360,6 +365,7 @@ setattr(args, 'cuda', torch.cuda.is_available() and not args.no_cuda)
 
 # Print configuration
 print(f'running')
+print(f'  - layer_type: {args.id}')
 print(f'  - layer_type: {args.layer_type}')
 print(f'  - first_layer: {args.first_layer}')
 print(f'  - operation: {args.operation}')
@@ -528,7 +534,8 @@ summary_writer = stable_nalu.writer.SummaryWriter(
     f'_gn-{args.clip_grad_norm if args.clip_grad_norm != None else f"F"}'
     # f'_L{args.lp_norm}'
     # f'_TB-{args.log_interval}'
-    f'_{get_train_criterion_writer_value()}',
+    f'_{get_train_criterion_writer_value()}'
+    f'_id{args.id}',
     remove_existing_data=args.remove_existing_data
 )
 
@@ -718,14 +725,16 @@ for epoch_i, (x_train, t_train) in zip(range(resume_epoch, args.max_iterations +
     loss_train_criterion = stable_nalu.functional.get_train_criterion(args.train_criterion, mse_loss, pcc_loss, mape_loss,
                                                                       epoch_i, args.pcc2mse_iteration)
 
+    loss_train_criterion = mse_loss
+
     loss_train_regualizer = args.regualizer * r_w_scale * regualizers['W'] + \
                             regualizers['g'] + \
                             args.regualizer_z * regualizers['z'] + \
                             args.regualizer_oob * regualizers['W-OOB'] + \
                             args.regualizer_l1 * r_l1_scale * l1_loss + \
                             args.regualizer_npu_w * (r_l1_scale if args.reg_scale_type == 'heim' else r_w_scale) * regualizers['W-NPU'] + \
-                            args.regualizer_gate * (r_l1_scale if args.reg_scale_type == 'heim' else r_w_scale) * regualizers['g-NPU'] + \
-                            (torch.norm(model.layer_1.layer.trash_cell, 1) if args.trash_cell else 0)  #+ \
+                            args.regualizer_gate * (r_l1_scale if args.reg_scale_type == 'heim' else r_w_scale) * regualizers['g-NPU'] #+ \
+                            # (torch.norm(model.layer_1.layer.trash_cell, 1) if args.trash_cell else 0)  #+ \
                             # (r_w_scale * regualizers['W-cancel']) if args.clip_grad_norm else 0
 
     loss_train = loss_train_criterion + loss_train_regualizer

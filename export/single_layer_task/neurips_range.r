@@ -121,7 +121,7 @@ p = ggplot(dat.gather, aes(x = parameter, colour=model, group=interaction(parame
   scale_shape(guide = FALSE) +
   facet_wrap(~ key, scales='free_y', labeller = labeller(
     key = c(
-      success.rate = "Success rate",
+      success.rate = "Extrapolation range success rate",
       converged.at = "Solved at iteration step",
       sparse.error = "Sparsity error"
     )

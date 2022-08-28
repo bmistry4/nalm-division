@@ -1,4 +1,3 @@
-
 import scipy.optimize
 import numpy as np
 import torch
@@ -7,6 +6,7 @@ import math
 from ..abstract import ExtendedTorchModule
 from ..functional import mnac, Regualizer, RegualizerNMUZ, sparsity_error
 from ._abstract_recurrent_cell import AbstractRecurrentCell
+
 
 class ReRegualizedLinearMNACLayer(ExtendedTorchModule):
     """Implements the NAC (Neural Accumulator)
@@ -67,12 +67,21 @@ class ReRegualizedLinearMNACLayer(ExtendedTorchModule):
 
     def forward(self, x, reuse=False):
         if self.use_noise and self.training:
-            noise = torch.Tensor(x.shape).uniform_(self.noise_range[0], self.noise_range[1]).to(self.W.device)  # [B,I]
+            # check if to use the batch stats for the upper bound (i.e. if range is [1,0]
+            if self.noise_range == [1, 0]:
+                x_sdev = x.std()
+                noise_upper = (1 + (1 / x_sdev)).item()
+                self.writer.add_scalar('snmu_noise/upper', noise_upper, verbose_only=False)
+                noise = torch.Tensor(x.shape).uniform_(1, noise_upper).to(self.W.device)
+            # use noise_range arg for lower and upper bounds
+            else:
+                noise = torch.Tensor(x.shape).uniform_(self.noise_range[0], self.noise_range[1]).to(
+                    self.W.device)  # [B,I]
             x *= noise
-            
+
         if self.allow_random:
             self._regualizer_nmu_z.append_input(x)
-    
+
         W = torch.clamp(self.W, 0.0 + self.mnac_epsilon, 1.0) \
             if self.nac_oob == 'regualized' \
             else self.W
@@ -80,7 +89,6 @@ class ReRegualizedLinearMNACLayer(ExtendedTorchModule):
         self.writer.add_histogram('W', W)
         self.writer.add_tensor('W', W, verbose_only=False if self.use_robustness_exp_logging else True)
         self.writer.add_scalar('W/sparsity_error', sparsity_error(W), verbose_only=self.use_robustness_exp_logging)
-
 
         if self.mnac_normalized:
             c = torch.std(x)
@@ -94,13 +102,14 @@ class ReRegualizedLinearMNACLayer(ExtendedTorchModule):
         if self.use_noise and self.training:
             # [B,O] / mnac([B,I], [O,I] 'prod') --> [B,O] / [B,O] --> [B,O]
             out = out / mnac(noise, W, mode='prod')
-            
+
         return out
 
     def extra_repr(self):
         return 'in_features={}, out_features={}'.format(
             self.in_features, self.out_features
         )
+
 
 class ReRegualizedLinearMNACCell(AbstractRecurrentCell):
     """Implements the NAC (Neural Accumulator) as a recurrent cell
@@ -109,5 +118,6 @@ class ReRegualizedLinearMNACCell(AbstractRecurrentCell):
         input_size: number of ingoing features
         hidden_size: number of outgoing features
     """
+
     def __init__(self, input_size, hidden_size, **kwargs):
         super().__init__(ReRegualizedLinearMNACLayer, input_size, hidden_size, **kwargs)

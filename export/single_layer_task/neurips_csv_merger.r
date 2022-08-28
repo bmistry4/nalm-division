@@ -174,6 +174,20 @@ load.and.merge.csvs = function(lookup.name) {
       paste('/data/nalms/csvs/sltr-in10/distributions/', 'sign-nmru', csv_ext, sep = '')
     ),
       list('Real NPU (modified)', 'NRU', 'NMRU')
+    ),
+    "in2-mixedSigns" = npu.csv.merger(list(
+      paste('/data/nalms/csvs/mixedSigns-in2/', 'realnpu-modified', csv_ext, sep = ''),
+      paste('/data/nalms/csvs/mixedSigns-in2/', 'nru', csv_ext, sep = ''),
+      paste('/data/nalms/csvs/mixedSigns-in2/', 'nmru', csv_ext, sep = '')
+    ),
+      list('Real NPU (modified)', 'NRU', 'NMRU')
+    ),
+    "in10-mixedSigns" = npu.csv.merger(list(
+      paste('/data/nalms/csvs/mixedSigns-in10/', 'realnpu-modified', csv_ext, sep = ''),
+      paste('/data/nalms/csvs/mixedSigns-in10/', 'nru', csv_ext, sep = ''),
+      paste('/data/nalms/csvs/mixedSigns-in10/', 'nmru', csv_ext, sep = '')
+    ),
+      list('Real NPU (modified)', 'NRU', 'NMRU')
     )
   ))
 }

@@ -99,6 +99,7 @@ class ConcatReciprocalNMUSignRetrievalLayer(ExtendedTorchModule):
 
         self.writer.add_histogram('W', W)
         self.writer.add_tensor('W', W, verbose_only=False if self.use_robustness_exp_logging else True)
+        # self.writer.add_tensor('W', W, verbose_only=False)    # logs weights every log_interval
         self.writer.add_scalar('W/sparsity_error', sparsity_error(W), verbose_only=self.use_robustness_exp_logging)
 
         magnitude = mnac(x, W, mode='prod')

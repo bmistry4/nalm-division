@@ -96,6 +96,7 @@ class ReciprocalNMULayer(ExtendedTorchModule):
 
         self.writer.add_histogram('W', W)
         self.writer.add_tensor('W', W)
+        # self.writer.add_tensor('W', W, verbose_only=False)    # logs weights every log_interval
         self.writer.add_scalar('W/sparsity_error', sparsity_error(W), verbose_only=False)
 
         out = mnac(x, W, mode=self.div_mode, is_training=self.training)
